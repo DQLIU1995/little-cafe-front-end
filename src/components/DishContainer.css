@@ -1,0 +1,48 @@
+/* DishContainer.css */
+
+.dish-container {
+    margin-top: 50px; /* Add some space below the buttons */
+    text-align: center;
+}
+
+.dish-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap; /* Allow dishes to wrap to the next line */
+    justify-content: center; /* Center the dishes horizontally */
+}
+
+  /* Optional styles for individual dishes in the list */
+.dish {
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dish img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.dish p {
+    margin: 5px 0;
+}
+
+.dish p.name {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.dish p.price {
+    font-size: 18px;
+    color: #4CAF50;
+}
+
+.dish p.description {
+    font-size: 16px;
+    color: #888;
+}

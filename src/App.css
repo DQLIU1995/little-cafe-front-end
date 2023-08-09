@@ -1,38 +1,95 @@
+/* App.css */
+
+/* Overall page styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  position: relative; /* Add this to position relative for absolute positioning */
+}
+
 .App {
-  text-align: center;
+  display: flex;
+  justify-content: center; /* Center the content horizontally */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Styles for the Navbar */
+.navbar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f1f1f1;
+  width: 150px; /* Adjust the width as needed */
+  height: 100vh; /* Full height of the screen */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.links {
+  margin: 10px 0;
+}
+
+.links a {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.links a:hover {
+  background-color: #ddd;
+}
+
+.links a.active {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+/* Styles for the content area */
+.content {
+  padding: 20px;
+  max-width: 800px; /* Set a max-width for the content area */
+}
+
+/* Styles for the buttons in the navigation bar */
+nav {
+  /* position: fixed;
+  padding-bottom: 100;
+  background-color: #f1f1f1;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+  z-index: 999; */
+  padding-bottom: 30px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.button-container button {
+  font-size: 18px;
+  padding: 15px 30px; /* Larger padding for a cuter look */
+  margin: 10px;
+  border: none;
+  border-radius: 25px; /* Make the button more rounded */
+  background-color: #FF6B6B; /* Cute pinkish color */
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a shadow for depth */
+  transition: background-color 0.3s ease;
+}
+
+.button-container button:hover {
+  background-color: #FF8E8E; /* Lighter pink on hover */
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: 36px; /* Increase the font size for your cafe name */
+  margin-top: 0;
+  color: #333; /* Customize the color as needed */
+  text-align: center;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}

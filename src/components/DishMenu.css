@@ -1,0 +1,40 @@
+/* DishMenu.css */
+
+/* Main container for the dish card */
+.dish {
+    width: 300px;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin: 20px;
+    display: inline-block;
+}
+
+/* Style for the dish name */
+.name {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Style for the dish image */
+.dish img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* Style for the dish description */
+.dish p:nth-child(3) {
+    font-style: italic;
+    margin-top: 10px;
+}
+
+/* Style for the dish price */
+.dish p:nth-child(4) {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+
