@@ -38,10 +38,30 @@ function App() {
   /*-----------------------------------------   DISH ----------------------------------------------   */
 
   useEffect(() => {
-    getAllDishData();
-    console.log("in dish use effect")
-    console.log(allDishes)
+    backend
+      .getAllDish()
+      .then((allDishes) => {
+        setDishData(sort(allDishes.data));
+      })
+      .catch((err) => {
+        console.log("Error in getAllCategories()", err);
+      });
   }, []); 
+
+  // const getAllDishData = () => {
+  //   backend
+  //   .getAllDish()
+  //   .then((dishes) =>{
+  //     setDishData(dishes.data);
+  //   })
+  //   .catch((err) => {
+  //     console.log("Error in dishData()", err); 
+  //   });
+  // }
+
+  // useEffect(() => {
+  //   getAllDishData();
+  // }, []); 
 
   const handleNewDishSubmit = (data) => {
     backend
@@ -111,16 +131,8 @@ function App() {
   };
 
 
-  const getAllDishData = () => {
-    backend
-    .getAllDish()
-    .then((dishes) =>{
-      setDishData(dishes.data);
-    })
-    .catch((err) => {
-      console.log("Error in dishData()", err); 
-    });
-  }
+
+
 
 
   const imageUpload = async (image) => {
@@ -267,7 +279,9 @@ function App() {
             setLoggedIn={setLoggedIn}/>}
             />
             <Route exact path="/ManagerPage"
-            element={<ManagerPage />}
+            element={<ManagerPage 
+              loggedIn={loggedIn} 
+              setLoggedIn={setLoggedIn}/>}
             />
             <Route exact path="/DishManager"
             element={<DishManager 
@@ -275,11 +289,13 @@ function App() {
                 categories={categories}
                 setDishData={setDishData}
                 getCategoryByCategoryId={getCategoryByCategoryId}
-                getAllDishData={getAllDishData}
+                // getAllDishData={getAllDishData}
                 handleNewDishSubmit={handleNewDishSubmit}
                 handleDishDelete={handleDishDelete}
                 onDishUpdate={onDishUpdate}
                 imageUpload={imageUpload}
+                loggedIn={loggedIn} 
+                setLoggedIn={setLoggedIn}
               />}
             />
             <Route exact path="/CategoryManager"
@@ -288,6 +304,8 @@ function App() {
               onCategoryUpdate={onCategoryUpdate}
               onCategoryDelete={onCategoryDelete}
               onCategoryAdd={onCategoryAdd}
+              loggedIn={loggedIn} 
+              setLoggedIn={setLoggedIn}
                     /> 
                       }
             />

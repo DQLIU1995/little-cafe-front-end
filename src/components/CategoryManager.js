@@ -9,9 +9,16 @@ const CategoryTable = (props) => {
     const onCategoryUpdate = props.onCategoryUpdate
     const onCategoryDelete = props.onCategoryDelete
     const onCategoryAdd = props.onCategoryAdd
+    const loggedIn = props.loggedIn; 
+    const setLoggedIn = props.setLoggedIn;
 
     const [editedCategories, setEditedCategories] = useState([]);
     const [newCategory, setNewCategory] = useState({ type: '', name: '' });
+
+    const handleLogout = () => {
+        localStorage.removeItem('loggedInUserID');
+        setLoggedIn(!loggedIn); // Mark the user as logged out
+    };
 
     useEffect(() => {
         /*console.log("set up edit category")*/
@@ -113,6 +120,11 @@ const CategoryTable = (props) => {
                     onChange={(event) => setNewCategory((prev) => ({ ...prev, status: event.target.value }))}
                 />
                 <button onClick={handleAddCategory}>Add New Category</button>
+            </div>
+            <div>
+                <Link to="/LogIn">
+                <button id="logout-button" onClick={handleLogout}>Logout</button> 
+                </Link>
             </div>
         </div>
     );

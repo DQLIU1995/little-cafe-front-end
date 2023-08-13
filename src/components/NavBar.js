@@ -10,9 +10,9 @@ const Navbar = ({ loggedIn }) => {
             </div>
             <div className="links">
                 {loggedIn ? (
-                    <NavLink to="/LogIn"> Log out</NavLink>
+                    <NavLink to="/LogIn"> Manager Log In</NavLink>
                 ) : (
-                    <NavLink to="/LogIn"> Log in</NavLink>
+                    <NavLink to="/LogIn"> Manage Center</NavLink>
                 )}
             </div>
         </nav>
