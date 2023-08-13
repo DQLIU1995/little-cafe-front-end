@@ -46,16 +46,16 @@ function App() {
       });
   }, []);
 
-  // const getAllDishData = () => {
-  //   backend
-  //   .getAllDish()
-  //   .then((dishes) =>{
-  //     setDishData(dishes.data);
-  //   })
-  //   .catch((err) => {
-  //     console.log("Error in dishData()", err); 
-  //   });
-  // }
+  const getAllDishData = () => {
+    backend
+    .getAllDish()
+    .then((dishes) =>{
+      setDishData(sort(dishes.data));
+    })
+    .catch((err) => {
+      console.log("Error in dishData()", err); 
+    });
+  }
 
   // useEffect(() => {
   //   getAllDishData();
@@ -66,6 +66,9 @@ function App() {
       .addDish(data)
       .then((result) => {
         setDishData((prevDishData) => [result.data, ...prevDishData]);
+        console.log("****----------------------------------- for myself result data****------------------------------------------------")
+        console.log(result.data)
+        return result.data
       })
       .catch((err) => {
         console.log("Error in handleNewDishSubmit", err);
@@ -98,31 +101,6 @@ function App() {
       .then(setDishData((prev) => prev.filter((dish) => dish.dishId === dish_id)))
   };
 
-  // const onDishUpdate = async (dish) => {
-  //   const dishToUpdate = dish;
-
-  //   if (dishToUpdate.image instanceof File) {
-  //     const formData = new FormData();
-  //     formData.append('image', dishToUpdate.image);
-  //     const url = await imageUpload(formData);
-  //     dishToUpdate.image = url;
-  //   }
-
-  //   backend.updateDish(dishToUpdate)
-  //     .then(() => {
-  //       setCurrentDishData((prev) => prev.map(eachDish => {
-  //         if (eachDish.dishId === dishToUpdate.dishId) {
-  //           return dishToUpdate;
-  //         } else {
-  //           return eachDish; 
-  //         }
-  //       }))
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error updating Dish:', error);
-  //     });
-  // };
-
   const onDishUpdate = async (dish) => {
     const dishToUpdate = dish;
     if (dishToUpdate.image instanceof File) {
@@ -132,7 +110,7 @@ function App() {
       console.log("inside on dishupdate get url")
 
       dishToUpdate.image = url;
-      console.log(url)
+      // console.log(url)
 
     }
     console.log("inside on dishupdate")
@@ -321,6 +299,7 @@ function App() {
                 loggedIn={loggedIn}
                 setLoggedIn={setLoggedIn}
                 setCurrentDishData={setCurrentDishData}
+                getAllDishData={getAllDishData}
               />}
             />
             <Route exact path="/CategoryManager"

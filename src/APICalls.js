@@ -1,8 +1,8 @@
 import axios from "axios"; 
 
-const dishBaseUrl = "http://localhost:8080/dishes"; 
-const categoryBaseUrl = "http://localhost:8080/categories"; 
-const userBaseUrl = "http://localhost:8080/user"; 
+const dishBaseUrl = "http://little-cafe-backend-env-2.eba-m5anefry.us-east-1.elasticbeanstalk.com/dishes"; 
+const categoryBaseUrl = "http://little-cafe-backend-env-2.eba-m5anefry.us-east-1.elasticbeanstalk.com/categories"; 
+const userBaseUrl = "http://little-cafe-backend-env-2.eba-m5anefry.us-east-1.elasticbeanstalk.com/user"; 
 
 
 

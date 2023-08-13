@@ -8,8 +8,6 @@ const DishManager = (props) => {
 
     const setDishData = props.setDishData
     const dishes = props.dishes
-    console.log("***----------**数据库***************")
-    console.log(dishes)
     const categories = props.categories
     const getCategoryByCategoryId = props.getCategoryByCategoryId
     const handleNewDishSubmit = props.handleNewDishSubmit
@@ -18,7 +16,8 @@ const DishManager = (props) => {
     const imageUpload = props.imageUpload
     const loggedIn = props.loggedIn;
     const setLoggedIn = props.setLoggedIn;
-    const setCurrentDishData = props.setCurrentDishData
+    const setCurrentDishData = props.setCurrentDishData;
+    const getAllDishData = props.getAllDishData;
 
     const [editedDishes, setEditedDishes] = useState([]);
     const [newDish, setNewDish] = useState({ name: '', categoryId: '', price: '', image: '', description: '', status: '' });
@@ -41,9 +40,9 @@ const DishManager = (props) => {
         const { name, value } = event.target;
         setEditedDishes((prevDishes) => {
             const updatedDishes = [...prevDishes];
-            console.log("inside handle input change")
-            console.log(name)
-            console.log(value)
+            // console.log("inside handle input change")
+            // console.log(name)
+            // console.log(value)
             if (name === "categoryId") {
                 const dishCategoryId = categories.find(category => category.name === value)["categoryId"]
                 updatedDishes[index][name] = dishCategoryId;
@@ -55,11 +54,6 @@ const DishManager = (props) => {
                 updatedDishes[index][name] = value;
             }
 
-
-            // console.log("current update dishes")
-            // console.log(updatedDishes)
-            // console.log("current dishes")
-            // console.log(dishes)
             return updatedDishes;
         });
     };
@@ -98,18 +92,17 @@ const DishManager = (props) => {
             description: newDish.description,
             status: newDish.status
         }
+
+
         handleNewDishSubmit(dishTobeAdded);
         // setDishData(prevDishes => [...prevDishes, dishTobeAdded]);
         setNewDish({ name: '', categoryId: '', price: '', image: '', description: '', status: '' });
 
-        console.log("***----------**look here***************")
-        console.log(categories)
-
-        console.log('******----- liu dish*******')
-        console.log(dishes)
-        console.log('******------edited dish*******')
-        console.log(editedDishes)
         setCurrentDishData(null)
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 3000); // 3000 milliseconds = 3 seconds
     };
 
     return (
@@ -279,161 +272,4 @@ const DishManager = (props) => {
 };
 
 export default DishManager;
-
-
-
-// import React, { useState, useEffect } from "react";
-// import "./DishManager.css";
-// import { Link } from 'react-router-dom';
-// import DishItem from "./DishItem"; // Import the DishItem component
-// import AddDishForm from "./AddDishForm"; // Import the AddDishForm component
-
-// const DishManager = (props) => {
-    
-//     const setDishData = props.setDishData
-//     const getAllDishData = props.getAllDishData
-//     const dishes = props.dishes
-//     const categories = props.categories
-//     const getCategoryByCategoryId = props.getCategoryByCategoryId
-//     const handleNewDishSubmit = props.handleNewDishSubmit
-//     const handleDishDelete = props.handleDishDelete
-//     const onDishUpdate = props.onDishUpdate
-//     const imageUpload = props.imageUpload
-//     const loggedIn = props.loggedIn;
-//     const setLoggedIn = props.setLoggedIn;
-
-//     const [editedDishes, setEditedDishes] = useState([]);
-//     const [newDish, setNewDish] = useState({ name: '', categoryId: '', price: '', image: '', description: '', status: '' });
-
-//     const handleLogout = () => {
-//         localStorage.removeItem('loggedInUserID');
-//         setLoggedIn(!loggedIn); // Mark the user as logged out
-//     };
-
-
-//     useEffect(() => {
-//         setEditedDishes(dishes);
-//     }, [dishes]);
-
-
-//     const handleInputChange = (event, index) => {
-//         const { name, value } = event.target;
-//         setEditedDishes((prevDishes) => {
-//             const updatedDishes = [...prevDishes];
-//             console.log("inside handle input change")
-//             console.log(name)
-//             console.log(value)
-//             if (name === "categoryId") {
-//                 const dishCategoryId = categories.find(category => category.name === value)["categoryId"]
-//                 updatedDishes[index][name] = dishCategoryId;
-//             }
-//             else if (name == "file") {
-//                 updatedDishes[index].image = event.target.files[0];
-//             }
-//             else {
-//                 updatedDishes[index][name] = value;
-//             }
-
-//             return updatedDishes;
-//         });
-//     };
-
-//     const handleSubmit = (index) => {
-//         const updatedDish = editedDishes[index];
-//         onDishUpdate(updatedDish);
-//         window.alert('Change made successfully.');
-//     };
-
-//     const handleDelete = (index) => {
-//         const deleteDish = editedDishes[index];
-//         handleDishDelete(deleteDish.dishId);
-//     };
-
-//     // function sleep(ms) {
-//     //     return new Promise(resolve => setTimeout(resolve, ms));
-//     // }
-
-//     const handleAddDish = async () => {
-//         const formData = new FormData();
-//         formData.append('image', newDish.image);
-//         const url = await imageUpload(formData)
-//         console.log("handle dish returned url")
-//         console.log(url)
-//         const dishTobeAdded = {
-//             name: newDish.name,
-//             categoryId: newDish.categoryId,
-//             price: newDish.price,
-//             image: url,
-//             description: newDish.description,
-//             status: newDish.status
-//         }
-//         handleNewDishSubmit(dishTobeAdded);
-//         setEditedDishes((prevDishes) => [...prevDishes, dishTobeAdded]);
-//         setNewDish({ name: '', categoryId: '', price: '', image: '', description: '', status: '' });
-
-//         console.log("here is handle add dish")
-//         console.log(editedDishes)
-//         console.log(categories)
-//     };
-
-
-//     return (
-//         <div>
-//             <h2>Welcome to Dish Management Center</h2>
-//             <div>
-//                 <table>
-//                     <thead>
-//                         <tr>
-//                             <th>name</th>
-//                             <th>category_name</th>
-//                             <th>price</th>
-//                             <th>image</th>
-//                             <th>upload</th>
-//                             <th>description</th>
-//                             <th>status</th>
-//                             <th>options</th>
-//                         </tr>
-//                     </thead>
-//                     <tbody>
-//                         {editedDishes && categories && editedDishes.map((dish, index) => (
-//                             <DishItem
-//                                 key={index}
-//                                 dish={dish}
-//                                 categories={categories}
-//                                 handleInputChange={handleInputChange}
-//                                 handleDelete={handleDelete}
-//                                 handleSubmit={handleSubmit}
-//                                 index={index}
-//                             />
-//                         ))}
-//                     </tbody>
-//                 </table>
-//             </div>
-//             <AddDishForm
-//                 newDish={newDish}
-//                 setNewDish={setNewDish}
-//                 categories={categories}
-//                 handleAddDish={handleAddDish}
-//             />
-//             <div>
-//                 <Link to="/LogIn">
-//                     <button id="logout-button" onClick={handleLogout}>Logout</button>
-//                 </Link>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default DishManager;
-
-
-
-
-
-
-
-
-
-
-
 
