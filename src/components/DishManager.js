@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./DishManager.css";
-import { Link } from 'react-router-dom';
+
 
 const DishManager = (props) => {
 
@@ -12,6 +12,7 @@ const DishManager = (props) => {
     const handleNewDishSubmit = props.handleNewDishSubmit
     const handleDishDelete = props.handleDishDelete
     const onDishUpdate = props.onDishUpdate
+    const imageUpload = props.imageUpload
 
     const [editedDishes, setEditedDishes] = useState([]);
     const [newDish, setNewDish] = useState({ name: '', categoryId: '', price: '', image: '', description: '', status: '' });
@@ -35,26 +36,32 @@ const DishManager = (props) => {
                 const dishCategoryId = categories.find(category => category.name === value)["categoryId"]
                 updatedDishes[index][name] = dishCategoryId;
             }
+            else if (name == "file") {
+                updatedDishes[index].image = event.target.files[0];
+            }
             else {
                 updatedDishes[index][name] = value;
             }
             console.log("current update dishes")
             console.log(updatedDishes)
+            console.log("current dishes")
+            console.log(dishes)
             return updatedDishes;
         });
     };
 
     // const handleDocumentUpload = (event, index) => {
     //     const file = event.target.files[0]; 
-    
+
     //     // Assuming you are using React state to manage the data
     //     const updatedDishes = [...dishes]; // Assuming 'dishes' is your array of dish objects
     //     updatedDishes[index].document = file; // Store the uploaded file in the dish object
     //     updatedDishes[index].documentName = file.name; // Store the file name
-    
+
     //     setDishes(updatedDishes); // Update the state with the new information
     // };
-    
+
+
 
     const handleSubmit = (index) => {
         const updatedDish = editedDishes[index];
@@ -66,17 +73,27 @@ const DishManager = (props) => {
         handleDishDelete(deleteDish.dishId);
     };
 
-    const handleAddDish = () => {
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    const handleAddDish = async () => {
         console.log("inside handleadddish")
         console.log(newDish)
         console.log(categories)
-        const dishTobeAdded = { 
+        const formData = new FormData();
+        formData.append('image', newDish.image);
+        const url = await imageUpload(formData)
+        console.log("handle dish returned url")
+        console.log(url)
+        const dishTobeAdded = {
             name: newDish.name,
             categoryId: newDish.categoryId,
             price: newDish.price,
-            image: newDish.image,
+            image: url,
             description: newDish.description,
-            status: newDish.status }
+            status: newDish.status
+        }
         handleNewDishSubmit(dishTobeAdded);
         setEditedDishes((prevDishes) => [...prevDishes, dishTobeAdded])
         setNewDish({ name: '', categoryId: '', price: '', image: '', description: '', status: '' });
@@ -95,6 +112,7 @@ const DishManager = (props) => {
                         <th>category_name</th>
                         <th>price</th>
                         <th>image</th>
+                        <th></th>
                         <th>description</th>
                         <th>status</th>
                     </tr>
@@ -114,14 +132,16 @@ const DishManager = (props) => {
                                     onChange={(event) => handleInputChange(event, index)}
                                 />
                             </td>
-                            <select name="categoryId" value={categories} onChange={(event) => handleInputChange(event, index)}>
-                                <option value="">{categories.find(category => category.categoryId === dish.categoryId)["name"]}</option>
-                                {
-                                    categories.filter(category => category.categoryId !== dish.categoryId).map((category) => (
-                                        <option name="categoryId" value={category.name}>{category.name}</option>
-                                    ))
-                                }
-                            </select>
+                            <td>
+                                <select name="categoryId" value={categories} onChange={(event) => handleInputChange(event, index)}>
+                                    <option value="">{categories.find(category => category.categoryId === dish.categoryId)["name"]}</option>
+                                    {
+                                        categories.filter(category => category.categoryId !== dish.categoryId).map((category) => (
+                                            <option name="categoryId" value={category.name}>{category.name}</option>
+                                        ))
+                                    }
+                                </select>
+                            </td>
                             <td>
                                 <input
                                     type="number"
@@ -131,12 +151,23 @@ const DishManager = (props) => {
                                 />
                             </td>
                             <td>
-                                <input
-                                    type="text"
-                                    name="image"
-                                    value={dish.image}
-                                    onChange={(event) => handleInputChange(event, index)}
-                                />
+                                {dish.image && (
+                                    <img
+                                        src={dish.image}
+                                        alt="Uploaded"
+                                        style={{ maxWidth: '100%', marginTop: '10px' }}
+                                    />
+                                )}
+                            </td>
+                            <td>
+                                <form method="POST" encType="multipart/form-data">
+                                    <input
+                                        type="file"
+                                        name="file"
+                                        placeholder="image"
+                                        onChange={(event) => handleInputChange(event, index)}
+                                    />
+                                </form>
                             </td>
                             <td>
                                 <input
@@ -187,12 +218,17 @@ const DishManager = (props) => {
                     value={newDish.price}
                     onChange={(event) => setNewDish((prev) => ({ ...prev, price: event.target.value }))}
                 />
-                <input
-                    type="text"
-                    placeholder="Image"
-                    value={newDish.image}
-                    onChange={(event) => setNewDish((prev) => ({ ...prev, image: event.target.value }))}
-                />
+                <form method="POST" encType="multipart/form-data">
+                    <input
+                        type="file"
+                        name="file"
+                        placeholder="Image"
+                        onChange={(event) => {
+                            setNewDish((prev) => ({ ...prev, image: event.target.files[0]}))
+                            console.log(newDish.image)
+                        }}
+                    />
+                </form>
                 <input
                     type="text"
                     placeholder="Description"

@@ -6,7 +6,7 @@ const Dish = (props) => {
     return (
     <section className="dish">
         <p className="name">{props.name}</p>
-        <p>{props.image}</p>
+        <img src={props.image}/>
         <p>"{props.description}"</p>
         <p>price: ${props.price}</p>
     </section>

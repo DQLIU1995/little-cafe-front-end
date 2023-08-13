@@ -182,3 +182,17 @@ export const getOneUser = async (user_id) => {
     const selectedUser = response.data;
     return selectedUser; 
 }
+
+/***************************************--------upload picture----------****************************************/ 
+
+/*---------------------post api ------------------*/ 
+
+export const uploadPicture = async (image) => {
+    try {
+        const response = await axios.post(`${dishBaseUrl}/image`, image);
+        return response.data;
+    } catch (error) {
+        console.error('Error uploading picture:', error);
+        throw error; // Re-throw the error to handle it in the calling code
+    }
+}

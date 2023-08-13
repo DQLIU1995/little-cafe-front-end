@@ -10,6 +10,7 @@ import DishManager from "./components/DishManager";
 import CategoryManager from "./components/CategoryManager"; 
 
 
+
 function App() {
 
   const [currentDishes, setCurrentDishData] = useState(null); 
@@ -18,7 +19,7 @@ function App() {
   const [categoryId, setCategoryId] = useState(null)
   const [allUser, setAllUser] = useState([])
   const [categories, setAllCategories] = useState([])
-
+  const [loggedIn, setLoggedIn] = useState(false);
 
   function sort(array)
   {
@@ -30,8 +31,10 @@ function App() {
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
   }
-
   
+
+
+
   /*-----------------------------------------   DISH ----------------------------------------------   */
 
   useEffect(() => {
@@ -78,12 +81,25 @@ function App() {
   };
 
 
-  const onDishUpdate=(dish) => {
-    backend.updateDish(dish)
+  const onDishUpdate= async (dish) => {
+    const dishToUpdate = dish;
+    if (dishToUpdate.image instanceof File) {
+      const formData = new FormData();
+      formData.append('image', dishToUpdate.image);
+      const url = await imageUpload(formData);
+      console.log("inside on dishupdate get url")
+
+      dishToUpdate.image = url;
+      console.log(url)
+
+    }
+    console.log("inside on dishupdate")
+    console.log(dishToUpdate)
+    backend.updateDish(dishToUpdate)
     .then(() => {
       setDishData((prev) => sort(prev.map(eachDish => {
-        if (eachDish.dishId === dish.dishId) {
-          return dish;
+        if (eachDish.dishId === dishToUpdate.dishId) {
+          return dishToUpdate;
         } else {
           return eachDish; 
         }
@@ -107,6 +123,17 @@ function App() {
   }
 
 
+  const imageUpload = async (image) => {
+    return await backend.uploadPicture(image)
+    .then(result => {
+      console.log("returned url")
+      console.log(result.data)
+      return result.data
+    })
+    .catch((error) => {
+      console.error('Error upload dish image:', error);
+    });
+  }
   /*-----------------------------------------   CATEGORY ----------------------------------------------   */
 
   useEffect(() => {
@@ -195,22 +222,29 @@ function App() {
   selectDishByCategoryId(103);
   }
 
+  const handleCategoryClick =(categoryId) => {
+    setCategoryId(categoryId);
+    getCategoryByCategoryId(categoryId);
+    selectDishByCategoryId(categoryId);
+  }
+
 
   return (
     <Router>
       <div className="App">
-        <Navbar />
+        <Navbar  loggedIn={loggedIn} 
+                  setLoggedI={setLoggedIn}/>
         <div className="content">
           <Routes>
             <Route exact path="/"
               element={
-                <div>
-                  <nav>
-                    <div className="button-container">
-                    <button onClick={appetizerBar}>🍗 Appetizer 🍗</button>
-                    <button onClick={mainDishBar}>🍱 Main Dish 🍱</button>
-                    <button onClick={dessertBar}>🍮 Dessert 🍮</button>
-                    </div>
+                <div >
+                  <nav className="button-container">
+                      {categories.map((category, index) => (
+                        <button key={index} onClick={() => handleCategoryClick(category.categoryId)}>
+                        {category.name}
+                        </button>
+                  ))}
                   </nav>
                   <div className='body__container'>
                     <h1 className="App-header"> 🍛 Little👨‍🍳 CAFE 🥘  </h1>
@@ -228,7 +262,9 @@ function App() {
               }
             />
             <Route exact path="/LogIn"
-            element={<LogIn allUsers={allUser}/>}
+            element={<LogIn allUsers={allUser} 
+            loggedIn={loggedIn} 
+            setLoggedIn={setLoggedIn}/>}
             />
             <Route exact path="/ManagerPage"
             element={<ManagerPage />}
@@ -243,6 +279,7 @@ function App() {
                 handleNewDishSubmit={handleNewDishSubmit}
                 handleDishDelete={handleDishDelete}
                 onDishUpdate={onDishUpdate}
+                imageUpload={imageUpload}
               />}
             />
             <Route exact path="/CategoryManager"

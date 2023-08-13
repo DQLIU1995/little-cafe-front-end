@@ -1,22 +1,22 @@
-// Remove the import statement for React (if you have it)
-// import React from 'react';
 import React from "react";
 import { NavLink } from "react-router-dom";
 import "./NavBar.css";
 
-const Navbar = () => {
+const Navbar = ({ loggedIn }) => {
     return (
         <nav className="navbar">
-
             <div className="links">
                 <NavLink to="/"> Home</NavLink>
             </div>
             <div className="links">
-                <NavLink to="/LogIn"> Log in</NavLink>
+                {loggedIn ? (
+                    <NavLink to="/LogIn"> Log out</NavLink>
+                ) : (
+                    <NavLink to="/LogIn"> Log in</NavLink>
+                )}
             </div>
         </nav>
     );
 }
 
 export default Navbar;
-
