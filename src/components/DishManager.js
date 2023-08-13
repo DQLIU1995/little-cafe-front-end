@@ -18,6 +18,7 @@ const DishManager = (props) => {
     const imageUpload = props.imageUpload
     const loggedIn = props.loggedIn;
     const setLoggedIn = props.setLoggedIn;
+    const setCurrentDishData = props.setCurrentDishData
 
     const [editedDishes, setEditedDishes] = useState([]);
     const [newDish, setNewDish] = useState({ name: '', categoryId: '', price: '', image: '', description: '', status: '' });
@@ -67,11 +68,13 @@ const DishManager = (props) => {
         const updatedDish = editedDishes[index];
         onDishUpdate(updatedDish);
         window.alert('Change made successfully.');
+        setCurrentDishData(null)
     };
 
     const handleDelete = (index) => {
         const deleteDish = editedDishes[index];
         handleDishDelete(deleteDish.dishId);
+        setCurrentDishData(null)
     };
 
     // function sleep(ms) {
@@ -101,6 +104,12 @@ const DishManager = (props) => {
 
         console.log("***----------**look here***************")
         console.log(categories)
+
+        console.log('******----- liu dish*******')
+        console.log(dishes)
+        console.log('******------edited dish*******')
+        console.log(editedDishes)
+        setCurrentDishData(null)
     };
 
     return (
@@ -139,11 +148,17 @@ const DishManager = (props) => {
                                         value={categories} onChange={(event) => handleInputChange(event, index)}>
                                         {console.log("******************look here")} 
                                         {console.log(categories)}
+                                        {console.log("********盘子***********")}
+                                        {console.log(dishes)}
+                                        {console.log("********one 盘子***********")}
+                                        {console.log(dish)}
+                                        {console.log("********edited盘子***********")}
+                                        {console.log(editedDishes)}
                                         {/* <option value="">{categories.find(category => category.categoryId === dish.categoryId)["name"]}</option> */}
-                                        <option value={dish.categoryId}>{categories.find(category => category.categoryId === dish.categoryId)["name"]}</option>
+                                        <option value={(dish.data? dish.data.categoryId : dish.categoryId)}>{categories.find(category => category.categoryId === (dish.data? dish.data.categoryId : dish.categoryId))["name"]}</option>
 
                                         {
-                                            categories.filter(category => category.categoryId !== dish.categoryId).map((category) => (
+                                            categories.filter(category => category.categoryId !== (dish.data? dish.data.categoryId : dish.categoryId)).map((category) => (
                                                 <option name="categoryId" value={category.name}>{category.name}</option>
                                             ))
                                         }

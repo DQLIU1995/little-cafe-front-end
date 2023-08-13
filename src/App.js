@@ -5,33 +5,31 @@ import DishContainer from "./components/DishContainer";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LogIn from "./components/LogIn";
 import Navbar from "./components/NavBar";
-import ManagerPage from "./components/ManagerManagement"; 
+import ManagerPage from "./components/ManagerManagement";
 import DishManager from "./components/DishManager";
-import CategoryManager from "./components/CategoryManager"; 
+import CategoryManager from "./components/CategoryManager";
 
 
 
 function App() {
 
-  const [currentDishes, setCurrentDishData] = useState(null); 
-  const [allDishes, setDishData] = useState(null); 
+  const [currentDishes, setCurrentDishData] = useState(null);
+  const [allDishes, setDishData] = useState(null);
   const [currentCategories, setCategoryData] = useState([])
   const [categoryId, setCategoryId] = useState(null)
   const [allUser, setAllUser] = useState([])
   const [categories, setAllCategories] = useState([])
   const [loggedIn, setLoggedIn] = useState(false);
 
-  function sort(array)
-  {
+  function sort(array) {
     console.log(array)
-    return array.sort(function(a, b)
-    {
-        var x = a.type;
-        var y = b.type;
-        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    return array.sort(function (a, b) {
+      var x = a.type;
+      var y = b.type;
+      return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
   }
-  
+
 
 
 
@@ -46,7 +44,7 @@ function App() {
       .catch((err) => {
         console.log("Error in getAllCategories()", err);
       });
-  }, []); 
+  }, []);
 
   // const getAllDishData = () => {
   //   backend
@@ -65,43 +63,67 @@ function App() {
 
   const handleNewDishSubmit = (data) => {
     backend
-    .addDish(data)
-    .then((result) => {
-      setDishData((prevDishData) => [result, ...prevDishData]);
-    })
-    .catch((err) => {
-      console.log("Error in handleNewDishSubmit", err);
-    })
+      .addDish(data)
+      .then((result) => {
+        setDishData((prevDishData) => [result.data, ...prevDishData]);
+      })
+      .catch((err) => {
+        console.log("Error in handleNewDishSubmit", err);
+      })
   };
 
   const handleDishDelete = (dishId) => {
     backend
-    .deleteDish(dishId)
-    .then(setDishData((prev) => prev.filter((dish) => dish.dishId !== dishId))
-    )
-    .catch((err) => {
-      console.log("Error in handleDishDelete", err)
-    })
+      .deleteDish(dishId)
+      .then(setDishData((prev) => prev.filter((dish) => dish.dishId !== dishId))
+      )
+      .catch((err) => {
+        console.log("Error in handleDishDelete", err)
+      })
   };
 
-  const selectDishByCategoryId =(categoryId) => {
+  const selectDishByCategoryId = (categoryId) => {
     backend
-    .getDishByCategoryId(categoryId)
-    .then((result) => {
-      console.log("here in select dish by category id function");
-      console.log(result);
-      setCurrentDishData(result.data);
-    })
+      .getDishByCategoryId(categoryId)
+      .then((result) => {
+        console.log("here in select dish by category id function");
+        console.log(result);
+        setCurrentDishData(result.data);
+      })
   };
-  
-  const getDishByDishId =(dish_id) => {
+
+  const getDishByDishId = (dish_id) => {
     backend
-    .getDishByDishId(dish_id)
-    .then(setDishData((prev) => prev.filter((dish) => dish.dishId === dish_id)))
+      .getDishByDishId(dish_id)
+      .then(setDishData((prev) => prev.filter((dish) => dish.dishId === dish_id)))
   };
 
+  // const onDishUpdate = async (dish) => {
+  //   const dishToUpdate = dish;
 
-  const onDishUpdate= async (dish) => {
+  //   if (dishToUpdate.image instanceof File) {
+  //     const formData = new FormData();
+  //     formData.append('image', dishToUpdate.image);
+  //     const url = await imageUpload(formData);
+  //     dishToUpdate.image = url;
+  //   }
+
+  //   backend.updateDish(dishToUpdate)
+  //     .then(() => {
+  //       setCurrentDishData((prev) => prev.map(eachDish => {
+  //         if (eachDish.dishId === dishToUpdate.dishId) {
+  //           return dishToUpdate;
+  //         } else {
+  //           return eachDish; 
+  //         }
+  //       }))
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error updating Dish:', error);
+  //     });
+  // };
+
+  const onDishUpdate = async (dish) => {
     const dishToUpdate = dish;
     if (dishToUpdate.image instanceof File) {
       const formData = new FormData();
@@ -116,35 +138,30 @@ function App() {
     console.log("inside on dishupdate")
     console.log(dishToUpdate)
     backend.updateDish(dishToUpdate)
-    .then(() => {
-      setDishData((prev) => sort(prev.map(eachDish => {
-        if (eachDish.dishId === dishToUpdate.dishId) {
-          return dishToUpdate;
-        } else {
-          return eachDish; 
-        }
-      })))
-    })
-    .catch((error) => {
-      console.error('Error updating Dish:', error);
-    });
+      .then(() => {
+        setDishData((prev) => sort(prev.map(eachDish => {
+          if (eachDish.dishId === dishToUpdate.dishId) {
+            return dishToUpdate;
+          } else {
+            return eachDish;
+          }
+        })))
+      })
+      .catch((error) => {
+        console.error('Error updating Dish:', error);
+      });
   };
-
-
-
-
-
 
   const imageUpload = async (image) => {
     return await backend.uploadPicture(image)
-    .then(result => {
-      console.log("returned url")
-      console.log(result.data)
-      return result.data
-    })
-    .catch((error) => {
-      console.error('Error upload dish image:', error);
-    });
+      .then(result => {
+        console.log("returned url")
+        console.log(result.data)
+        return result.data
+      })
+      .catch((error) => {
+        console.error('Error upload dish image:', error);
+      });
   }
   /*-----------------------------------------   CATEGORY ----------------------------------------------   */
 
@@ -157,50 +174,50 @@ function App() {
       .catch((err) => {
         console.log("Error in getAllCategories()", err);
       });
-  }, []); 
+  }, []);
 
-  const getCategoryByCategoryId =(categoryId) => {
+  const getCategoryByCategoryId = (categoryId) => {
     backend
-    .getOneCategory(categoryId)
-    .then((result) => setCategoryData(result.data.name))
+      .getOneCategory(categoryId)
+      .then((result) => setCategoryData(result.data.name))
   };
-  
 
-  const onCategoryUpdate=(category) => {
+
+  const onCategoryUpdate = (category) => {
     backend.updateCategory(category)
-    .then(() => {
-      setAllCategories((prev) => sort(prev.map(eachCategory => {
-        if (eachCategory.categoryId === category.categoryId) {
-          return category;
-        } else {
-          return eachCategory; 
-        }
-      })))
-    })
-    .catch((error) => {
-      console.error('Error updating category:', error);
-    });
+      .then(() => {
+        setAllCategories((prev) => sort(prev.map(eachCategory => {
+          if (eachCategory.categoryId === category.categoryId) {
+            return category;
+          } else {
+            return eachCategory;
+          }
+        })))
+      })
+      .catch((error) => {
+        console.error('Error updating category:', error);
+      });
   };
 
   const onCategoryDelete = (categoryId) => {
     backend
-    .deleteCategory(categoryId)
-    .then(setAllCategories((prev) => sort(prev.filter((category) => category.categoryId !== categoryId)))
-    )
-    .catch((err) => {
-      console.log("Error in onCategoryDelete", err)
-    })
+      .deleteCategory(categoryId)
+      .then(setAllCategories((prev) => sort(prev.filter((category) => category.categoryId !== categoryId)))
+      )
+      .catch((err) => {
+        console.log("Error in onCategoryDelete", err)
+      })
   };
 
   const onCategoryAdd = (data) => {
     backend
-    .addCategory(data)
-    .then(() => {
-      setAllCategories((prevCategory) => sort([...prevCategory, data]));
-    })
-    .catch((err) => {
-      console.log("Error in onCategoryAdd", err);
-    })
+      .addCategory(data)
+      .then(() => {
+        setAllCategories((prevCategory) => sort([...prevCategory, data]));
+      })
+      .catch((err) => {
+        console.log("Error in onCategoryAdd", err);
+      })
   };
 
 
@@ -214,27 +231,9 @@ function App() {
       .catch((err) => {
         console.log("Error in setAllUser()", err);
       });
-  }, []); 
+  }, []);
 
-  const appetizerBar = () => {
-    setCategoryId(101);
-    getCategoryByCategoryId(101);
-    selectDishByCategoryId(101);
-  }
-
-  const mainDishBar = () => {
-  setCategoryId(102);
-  getCategoryByCategoryId(102);
-  selectDishByCategoryId(102);
-  }
-
-  const dessertBar = () => {
-  setCategoryId(103);
-  getCategoryByCategoryId(103);
-  selectDishByCategoryId(103);
-  }
-
-  const handleCategoryClick =(categoryId) => {
+  const handleCategoryClick = (categoryId) => {
     setCategoryId(categoryId);
     getCategoryByCategoryId(categoryId);
     selectDishByCategoryId(categoryId);
@@ -244,11 +243,36 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Navbar  loggedIn={loggedIn} 
-                  setLoggedI={setLoggedIn}/>
+        <Navbar loggedIn={loggedIn}
+          setLoggedI={setLoggedIn} />
         <div className="content">
           <Routes>
             <Route exact path="/"
+              element={
+                <div>
+                  <nav className="button-container">
+                    {categories.map((category, index) => (
+                      <button key={index} onClick={() => handleCategoryClick(category.categoryId)}>
+                        {category.name}
+                      </button>
+                    ))}
+                  </nav>
+                  <div className='body__container'>
+                    <h1 className="App-header"> 🍛 Little👨‍🍳 CAFE 🥘  </h1>
+                    {categoryId && currentDishes ? (
+                      <DishContainer
+                        dishList={currentDishes}
+                        categoryName={currentCategories}
+                        categoryId={categoryId}
+                      />
+                    ) : (
+                      <h2 className="App-header"> Welcome to My Cafe </h2>
+                    )}
+                  </div>
+                </div>
+              }
+            />
+            {/* <Route exact path="/"
               element={
                 <div >
                   <nav className="button-container">
@@ -272,19 +296,19 @@ function App() {
                   </div>
                 </div> 
               }
-            />
+            /> */}
             <Route exact path="/LogIn"
-            element={<LogIn allUsers={allUser} 
-            loggedIn={loggedIn} 
-            setLoggedIn={setLoggedIn}/>}
+              element={<LogIn allUsers={allUser}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn} />}
             />
             <Route exact path="/ManagerPage"
-            element={<ManagerPage 
-              loggedIn={loggedIn} 
-              setLoggedIn={setLoggedIn}/>}
+              element={<ManagerPage
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn} />}
             />
             <Route exact path="/DishManager"
-            element={<DishManager 
+              element={<DishManager
                 dishes={allDishes}
                 categories={categories}
                 setDishData={setDishData}
@@ -294,25 +318,26 @@ function App() {
                 handleDishDelete={handleDishDelete}
                 onDishUpdate={onDishUpdate}
                 imageUpload={imageUpload}
-                loggedIn={loggedIn} 
+                loggedIn={loggedIn}
                 setLoggedIn={setLoggedIn}
+                setCurrentDishData={setCurrentDishData}
               />}
             />
             <Route exact path="/CategoryManager"
-            element={<CategoryManager 
-              categories={categories}
-              onCategoryUpdate={onCategoryUpdate}
-              onCategoryDelete={onCategoryDelete}
-              onCategoryAdd={onCategoryAdd}
-              loggedIn={loggedIn} 
-              setLoggedIn={setLoggedIn}
-                    /> 
-                      }
+              element={<CategoryManager
+                categories={categories}
+                onCategoryUpdate={onCategoryUpdate}
+                onCategoryDelete={onCategoryDelete}
+                onCategoryAdd={onCategoryAdd}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
+              />
+              }
             />
           </Routes>
         </div>
       </div>
-  </Router>
+    </Router>
   );
 }
 
